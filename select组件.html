@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>select组件</title>
+	<link rel="stylesheet" type="text/css" href="select.css">
+</head>
+<script src="vue.js"></script>
+<body>
+	<div id="app">
+		<div style="float: left;">
+			<h2>自定义下拉框</h2>
+			<custom-select btn-value="查询" v-bind:list="list1"></custom-select>
+		</div>
+		<div style="float: left;">
+			<h2>自定义下拉框2</h2>
+			<custom-select btn-value="搜索" v-bind:list="list2"></custom-select>
+		</div>
+	</div>
+	<div id="app1">
+		<custom-select></custom-select>
+	</div>
+	<script>
+		Vue.component("custom-select",{
+			data(){
+				return {
+					selectShow:false,
+					val:""
+				}
+			},
+			props:["btnValue","list"],
+			template:`<section class="wrap">
+						<div class="searchIpt clearFix">
+							<div class="clearFix">
+								<input type="text" class="keyWord" :value="val" @click="selectShow = !selectShow" />
+								<input type="button" :value="btnValue" />
+								<span></span>
+							</div>
+							<custom-list 
+								v-show="selectShow" 
+								:list="list" 
+								v-on:receive="changeValueHandle"
+							>
+							</custom-list>
+						</div>
+					  </section>`,
+			methods:{
+				changeValueHandle(value){
+					this.val = value;
+				}
+			}
+		});
+		Vue.component("custom-list",{
+			props:["list"],
+			template:`<ul class="list">
+							<li v-for="item in list" @click="selectValueHandle(item)">{{item}}
+							</li>
+					  </ul>`,
+		    methods:{
+		    	selectValueHandle:function(item){
+		    		this.$emit("receive",item)
+		    	}
+		    }
+		})
+		
+		new Vue({
+			el:"#app",
+			data:{
+				list1:['北京','上海','广州','杭州'],
+				list2:['17-01-11','17-02-11','17-03-11','17-04-11'],
+			}
+		})
+	</script>
+</body>
+</html>
